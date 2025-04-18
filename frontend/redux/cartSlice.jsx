@@ -9,6 +9,11 @@ export const cartSlice = createSlice({
     initialState,
     reducers: {
         addTocart: (state, action) => {
+            const existedItem = state.cart.find(item=>item.title===action.payload.title)
+
+            if(existedItem)
+                return
+            
             state.cart.push(action.payload)
         }
     }

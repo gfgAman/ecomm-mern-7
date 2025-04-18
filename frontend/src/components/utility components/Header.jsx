@@ -24,6 +24,7 @@ import {
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
 import logo from '../../assets/logo.jfif'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const products = [
     { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -39,8 +40,9 @@ const callsToAction = [
 
 export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-    const [data, setData] = useState([])
     const navigate = useNavigate()
+
+    const data = useSelector(state=>state.cartSlice.cart)
 
 
 
@@ -49,7 +51,7 @@ export default function Header() {
             <nav aria-label="Global" className="mx-auto max-w-7xl px-6 py-4 lg:px-8">
                 <div className="flex items-center justify-between gap-6 lg:gap-12">
                     {/* Logo */}
-                    <img src={logo} alt="logo" className="h-8 w-auto flex-shrink-0" />
+                    <img src={logo} alt="logo" className="h-8 w-auto flex-shrink-0" onClick={()=>navigate('/')}/>
 
                     {/* Search bar - visible on lg+ only */}
                     <div className=" lg:block flex-grow">
@@ -89,7 +91,7 @@ export default function Header() {
                     {/* Navigation Links */}
                     <PopoverGroup className="hidden lg:flex lg:gap-x-8">
                         
-                            <span className="text-sm font-semibold text-gray-900" onClick={() => navigate('/cart')}>Cart</span>
+                            <span className="text-sm font-semibold text-gray-900" onClick={() => navigate('/cart')}>Cart{data.length}</span>
                             <span className="text-sm font-semibold text-gray-900" onClick={() => navigate('/contact-us')}>Contact Us</span>
                             <span className="text-sm font-semibold text-gray-900" onClick={() => navigate('/')}>Home</span>
                                         

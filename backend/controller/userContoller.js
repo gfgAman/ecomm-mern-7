@@ -1,5 +1,6 @@
 const userController = async(req,res)=>{
     try{
+        console.log('inside controller');
         res.send('helllo world')
     }
     catch(err){

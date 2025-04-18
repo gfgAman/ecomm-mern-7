@@ -1,11 +1,10 @@
-import React, { useContext } from 'react'
-import { cartContext } from '../../App'
+
 import { useSelector } from 'react-redux'
 
 
 const Cart = () => {
 
-  const data = useSelector(state=>state.cartSlice.cart)
+  const data = useSelector(state => state.cartSlice.cart)
 
   console.log(data);
 
@@ -16,10 +15,15 @@ const Cart = () => {
 
   return (
     <div>
-      {/* <h2>Cart</h2>
-      <p>Title: {data.title}</p>
-      <p>Description: {data.description}</p> */}
-      ucbsb
+      {
+
+        data.map(item => (
+          <>
+            <b className='text-bold'>{item.title}</b>
+            <h4>{item.description}</h4>
+          </>
+        ))
+      }
     </div>
   )
 }

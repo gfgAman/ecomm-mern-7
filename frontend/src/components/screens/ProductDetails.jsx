@@ -24,7 +24,7 @@ const ProductDetails = () => {
   return (
     <>
 
-      <Header />
+      
       <div className='flex flex-col'>
         <p>
 

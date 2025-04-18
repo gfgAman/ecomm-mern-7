@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 const ProductListing = () => {
   const navigate = useNavigate()
   return (
-    <div><Header/>
+    <div>
     <div className='flex justify-between'>
 
     {
