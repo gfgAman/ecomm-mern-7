@@ -1,12 +1,89 @@
-const userController = async(req,res)=>{
-    try{
-        console.log('inside controller');
-        res.send('helllo world')
+import { USERS } from "../models/userSchema.js"
+import bcrypt from 'bcrypt'
+
+export const postUserData = async (req, res) => {
+    try {
+        const { username, email, contact, password } = req.body
+
+        if (!username || !email || !contact || !password)
+            return res.status(401).json({ message: 'check all the details carefully!!!', status: 401 })
+
+        const saltValue = 10
+        const hashedPassword = await bcrypt.hash(password,saltValue)
+        const user = new USERS({
+            username,
+            email,
+            contact,
+            password:hashedPassword
+        })
+
+        await user.save()
+        return res.status(200).json({
+            success: true, status: 200, message: 'user saved successfully!!!'
+        })
     }
-    catch(err){
-        console.log(err);
-        return
+    catch (err) {
+        return res.status(500).json({ message: 'Internal server error', err })
     }
 }
 
-export default userController
+export const getUserData = async (req, res) => {
+    const{email,password} = req.body
+    const userData = await USERS.find({email})
+
+    if (!userData)
+        return res.status(404).json({ message: 'user not found', status: 404 })
+    
+    const isPasswordMatching = await bcrypt.compare(password,userData.password) 
+
+    if(!isPasswordMatching)
+        return res.status(401).json({message:'incorrect password',status:401})
+
+
+    return res.status(200).json({ status: 200, userData })
+}
+
+export const findUser = async (req, res) => {
+    const{email,password} = req.body
+
+    // console.log(email,password);
+    const userData = await USERS.find({email})
+
+    // console.log(userData);
+    if (!userData)
+        return res.status(404).json({ message: 'user not found', status: 404 })
+    
+    const isPasswordMatching = await bcrypt.compare(password,userData.password) 
+
+    console.log(isPasswordMatching);
+    // if(!isPasswordMatching)
+    //     return res.status(401).json({message:'incorrect password',status:401})
+
+
+    // return res.status(200).json({ status: 200, userData })
+}
+
+export const updateUserData = async (req, res) => {
+    const { email } = req.params
+    const { contact, password } = req.body
+    if (!contact || !password || !email)
+        return res.status(401).json({ message: 'fill data', status: 401 })
+
+    const userData = await USERS.findOneAndUpdate({ email }, { $set: { contact: contact, password: password } })
+
+    // if (!userData)
+    //     return res.status(404).json({ message: 'user not found', status: 404 })
+
+    // userData.contact = contact
+    // userData.password = password
+
+    await userData.save()
+    return res.status(200).json({ message: 'user data updated', status: 200 })
+}
+
+export const deleteUserData = async (req, res) => {
+    const { email } = req.query
+    await USERS.findOneAndDelete({ email })
+
+    return res.status(200).json({ message: 'user deleted successfully', status: 200 })
+}

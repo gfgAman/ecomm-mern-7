@@ -1,6 +1,10 @@
-import express from 'express';
-import userController from '../controller/userContoller.js';
+import express from 'express'
+import { deleteUserData, findUser, getUserData, postUserData, updateUserData } from '../controller/userContoller.js'
 
-export const userRouter = express.Router()
+export const router = express.Router()
 
-userRouter.get('/users-data',userController)
+router.post('/post', postUserData)
+router.get('/get', getUserData)
+router.put('/update/:email', updateUserData)
+router.delete('/delete', deleteUserData)
+router.post('/login', findUser)
