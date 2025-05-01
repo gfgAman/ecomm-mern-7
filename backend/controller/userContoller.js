@@ -1,9 +1,14 @@
 import { USERS } from "../models/userSchema.js"
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export const postUserData = async (req, res) => {
     try {
-        const { username, email, contact, password } = req.body
+        const { username, email, contact, password} = req.body
+        const{image} = req.file
 
         if (!username || !email || !contact || !password)
             return res.status(401).json({ message: 'check all the details carefully!!!', status: 401 })
@@ -18,6 +23,8 @@ export const postUserData = async (req, res) => {
         })
 
         await user.save()
+
+
         return res.status(200).json({
             success: true, status: 200, message: 'user saved successfully!!!'
         })
@@ -35,21 +42,30 @@ export const getUserData = async (req, res) => {
 }
 
 export const findUser = async (req, res) => {
-    const { email, password } = req.body
+    try{
 
-    const userData = await USERS.findOne({ email })
-
-    //instead of using find(), we need to use findOne() because we already are searching the data as unique key i.e email
-    if (!userData)
-        return res.status(404).json({ message: 'user not found', status: 404 })
-
-    const isPasswordMatching = await bcrypt.compare(password, userData.password)
-
-    if (!isPasswordMatching)
-        return res.status(401).json({ message: 'incorrect password', status: 401 })
-
-
-    return res.status(200).json({ status: 200, userData })
+        const { email, password } = req.body
+        
+        const userData = await USERS.findOne({ email })
+        
+        //instead of using find(), we need to use findOne() because we already are searching the data as unique key i.e email
+        if (!userData)
+            return res.status(404).json({ message: 'user not found', status: 404 })
+        
+        const isPasswordMatching = await bcrypt.compare(password, userData.password)
+        
+        if (!isPasswordMatching) {
+            return res.status(401).json({ message: 'incorrect password', status: 401 })
+        }
+        const token = await jwt.sign({ userid: userData._id, username: userData.username, email: userData.email }, process.env.SECRETKEY)
+        
+        
+        
+        return res.status(200).json({ status: 200, token })
+    }
+    catch(err){
+        res.send(err)
+    }
 }
 
 export const updateUserData = async (req, res) => {
