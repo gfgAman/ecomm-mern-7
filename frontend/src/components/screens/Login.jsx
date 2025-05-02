@@ -1,26 +1,47 @@
+import axios from 'axios'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify'
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
 
-    const onsubmitHandler = () => {
-        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        // if (!email || !password) {
-        //     alert('email or password cannot be empty')
-        //     return
-        // }
-        // if(!email.match(emailRegex)){
-        //     alert('put correct email')
-        //     return
-        // }
-        // if(password.length<8){
-        //     alert('password must be of 8 character')
-        //     return
-        // }
-        navigate('/products')
+    const onsubmitHandler = async() => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email || !password) {
+            toast.error('email or password cannot be empty')
+            return
+        }
+        if (!email.match(emailRegex)) {
+            toast.error('put correct email')
+            return
+        }
+        if (password.length < 8) {
+            toast.error('password must be atleast of 8 character')
+            return
+        }
+
+        const userDetail = { email: email, password: password }
+
+        const response = await axios.post('http://localhost:3000/login',userDetail)
+        const userRes = response?.data?.status
+
+        if (userRes === 404) {
+            console.log(response?.data?.message);
+            return
+        }
+
+        if (userRes === 401) {
+            console.log(response?.data?.message);
+            return
+        }
+        if (userRes === 200) {
+            // console.log(response?.data?.message);
+            navigate('/products')
+        }
+
     }
 
     return (
@@ -31,7 +52,7 @@ const Login = () => {
                         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                             Sign in to your account
                         </h1>
-                        <form className="space-y-4 md:space-y-6" action="#">
+                        <div className="space-y-4 md:space-y-6">
                             <div>
                                 <label
                                     htmlFor="email"
@@ -94,25 +115,26 @@ const Login = () => {
                                 </a>
                             </div>
                             <button
-                                type="submit"
-                                className="w-full text-white bg-blue-600 hover:bg-blue-700 hover:cursor-pointer focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
                                 onClick={onsubmitHandler}
+                                className="w-full text-white bg-blue-600 hover:bg-blue-700 hover:cursor-pointer focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+
                             >
                                 Sign in
                             </button>
                             <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                                 Don’t have an account yet?{" "}
-                                <a
-                                    href="#"
+                                <div
+                                    onClick={() => navigate('/signup')}
                                     className="font-medium text-primary-600 hover:underline dark:text-primary-500"
                                 >
                                     Sign up
-                                </a>
+                                </div>
                             </p>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </section>
 
     )

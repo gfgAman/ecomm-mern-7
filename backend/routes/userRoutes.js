@@ -3,8 +3,8 @@ import { deleteUserData, findUser, getUserData, postUserData, updateUserData } f
 
 export const router = express.Router()
 
-router.post('/post', postUserData)
-router.get('/get', getUserData)
+router.post('/signup', postUserData)
+router.get('/getuser', getUserData)
 router.put('/update/:email', updateUserData)
 router.delete('/delete', deleteUserData)
 router.post('/login', findUser)

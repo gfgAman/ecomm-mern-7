@@ -1,25 +1,26 @@
-import express from 'express'
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-import { router } from './routes/userRoutes.js'
+import express from 'express';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import { router } from './routes/userRoutes.js';
 
-dotenv.config()
+dotenv.config();
 
-const app = express()
-const MONGOURL = process.env.MONGOURL
+const app = express();
+// const MONGOURL = process.env.MONGOURL;
 
-try {
-  mongoose.connect(MONGOURL)
-  console.log('Database is connected');
-}
-catch (err) {
-  console.log(err);
-}
+// mongoose.connect(MONGOURL)
+//   .then(() => console.log('Database is connected'))
+//   .catch((err) => console.error('DB connection error:', err));
 
-app.use(express.json())
-app.use(router)
+app.use(express.json());
 
-app.get('/hello', (req, res) => res.send('hello world'))
+// Define basic route before using router
+// app.get('/home', (req, res) => {
+//   res.send("hi");
+// });
 
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => console.log(`server is running at ${PORT}`))
+// Prefix router to avoid collisions
+app.use('/api', router);
+
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => console.log(`server is running at ${PORT}`));

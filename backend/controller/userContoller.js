@@ -8,7 +8,6 @@ dotenv.config()
 export const postUserData = async (req, res) => {
     try {
         const { username, email, contact, password} = req.body
-        const{image} = req.file
 
         if (!username || !email || !contact || !password)
             return res.status(401).json({ message: 'check all the details carefully!!!', status: 401 })
