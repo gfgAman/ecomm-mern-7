@@ -11,14 +11,18 @@ import Signup from './components/screens/Signup'
 
 const App = () => {
 
+  const token = localStorage.getItem('token')
   return (
 
     <BrowserRouter>
-      {/* <Header /> */}
+      <Header />
       <Routes>
-        <Route path='/' element={<Login />} />
-        <Route path='signup' element = {<Signup/>}/>
-        <Route path='dashboard' element={<ProductListing />} />
+        {
+          !token ?
+            <Route path='/' element={<Login />} /> : <Route path='/' element={<ProductListing />} />
+        }
+        <Route path='signup' element={<Signup />} />
+
         <Route path='products' element={<ProductListing />} />
         <Route path='cart' element={<Cart />} />
         <Route path='contact-us' element={<ContactUs />} />

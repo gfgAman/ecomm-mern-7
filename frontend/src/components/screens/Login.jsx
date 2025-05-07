@@ -8,38 +8,46 @@ const Login = () => {
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
 
-    const onsubmitHandler = async() => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email || !password) {
-            toast.error('email or password cannot be empty')
-            return
-        }
-        if (!email.match(emailRegex)) {
-            toast.error('put correct email')
-            return
-        }
-        if (password.length < 8) {
-            toast.error('password must be atleast of 8 character')
-            return
-        }
+    const onsubmitHandler = async () => {
+        try {
 
-        const userDetail = { email: email, password: password }
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!email || !password) {
+                toast.error('email or password cannot be empty')
+                return
+            }
+            if (!email.match(emailRegex)) {
+                toast.error('put correct email')
+                return
+            }
+            if (password.length < 8) {
+                toast.error('password must be atleast of 8 character')
+                return
+            }
 
-        const response = await axios.post('http://localhost:3000/login',userDetail)
-        const userRes = response?.data?.status
+            const userDetail = { email: email, password: password }
 
-        if (userRes === 404) {
-            console.log(response?.data?.message);
-            return
+            const response = await axios.post('http://localhost:3000/login', userDetail)
+            const userRes = response?.data?.status
+
+            if (userRes === 404) {
+                toast.error(response?.data?.message);
+                return
+            }
+
+            if (userRes === 401) {
+                toast.error(response?.data?.message);
+                return
+            }
+            if (userRes === 200) {
+                console.log(response?.data);
+                localStorage.setItem('token',response?.data?.token)
+                navigate('/products')
+            }
+
         }
-
-        if (userRes === 401) {
-            console.log(response?.data?.message);
-            return
-        }
-        if (userRes === 200) {
-            // console.log(response?.data?.message);
-            navigate('/products')
+        catch (err) {
+            console.log(err);
         }
 
     }

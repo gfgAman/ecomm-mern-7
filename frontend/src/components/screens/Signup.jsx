@@ -1,10 +1,12 @@
 import axios from 'axios'
 import React, { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const Signup = () => {
 
     const [confirmPassword, setConfirmPassword] = useState('')
+    const navigate = useNavigate()
 
     const [userDetails, setUserDetails] = useState(
         { username: '', email: '', contact: '', password: '' }
@@ -13,7 +15,19 @@ const Signup = () => {
     const onSubmitHandler = async () => {
         try {
             const response = await axios.post('http://localhost:3000/signup', userDetails)
-            console.log(response?.data);
+            const userData = response?.data
+            console.log(userData, 'token');
+
+            if (userData?.status === 401) {
+                toast.error(userData?.message)
+                return
+            }
+            if (userData?.status === 409) {
+                toast.warn(userData?.message)
+            }
+            if (userData?.status === 200) {
+                navigate('/')
+            }
         }
         catch (err) {
             console.log(err);
