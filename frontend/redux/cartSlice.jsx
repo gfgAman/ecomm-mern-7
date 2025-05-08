@@ -22,11 +22,15 @@ export const cartSlice = createSlice({
             if (existedItem)
                 return
             state.cart.push(action.payload)
+        },
+
+        deleteCart:(state)=>{
+            state.cart.length = 0
         }
     }
 })
 
 // Action creators are generated for each case reducer function
-export const { addToCart, productDetail } = cartSlice.actions
+export const { addToCart, productDetail,deleteCart } = cartSlice.actions
 
 export default cartSlice.reducer
