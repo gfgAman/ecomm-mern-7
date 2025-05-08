@@ -6,7 +6,7 @@ const Cart = () => {
 
   const data = useSelector(state => state.cartSlice.cart)
 
-  console.log(data);
+  console.log(data,'dataaaa');
 
   // Optional: Handle case where context might be empty
   // if (!data || !data.title) {

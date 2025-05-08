@@ -42,7 +42,7 @@ export default function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const navigate = useNavigate()
 
-    const data = useSelector(state=>state.cartSlice.cart)
+    const data = useSelector(state=>state.cartSlice.product)
 
 
 

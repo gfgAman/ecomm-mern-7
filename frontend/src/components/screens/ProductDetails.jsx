@@ -2,25 +2,20 @@ import React, { useState } from 'react'
 import { items } from '../../assets/data'
 import { useParams } from 'react-router-dom'
 import Header from '../utility components/Header'
-import { useDispatch } from 'react-redux'
-import { addTocart} from '../../../redux/cartSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { addToCart } from '../../../redux/cartSlice'
+// import { addToCart} from '../../../redux/cartSlice'
 
 
 const ProductDetails = () => {
 
   
-  const params = useParams()
-  const { id } = params
-
+  const product = useSelector(state=>state.cartSlice.product)
   const dispatch = useDispatch()
-  const addToCartHandler = () => {
-
-    const obj = {
-      title: items[id].title,
-      description: items[id].description
-    }
-    dispatch(addTocart(obj))
+  const addToCartHandler = ()=>{
+    dispatch(addToCart(product))
   }
+  
   return (
     <>
 
@@ -28,14 +23,14 @@ const ProductDetails = () => {
       <div className='flex flex-col'>
         <p>
 
-          {items[id].title}
+          {product.name}
         </p>
         <p>
 
-          {items[id].description}
+          {product.price}
         </p>
 
-        <button className='text-red-600 bg-yellow-500 cursor-pointer' onClick={addToCartHandler}>Add to Cart</button>
+        <button className='text-red-600 bg-yellow-500 cursor-pointer'  onClick={addToCartHandler}>Add to Cart</button>
       </div>
     </>
 
