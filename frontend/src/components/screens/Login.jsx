@@ -27,7 +27,7 @@ const Login = () => {
 
             const userDetail = { email: email, password: password }
 
-            const response = await axios.post('http://localhost:3000/login', userDetail)
+            const response = await axios.post('https://ecomm-mern-7.onrender.com/login', userDetail)
             const userRes = response?.data?.status
 
             if (userRes === 404) {

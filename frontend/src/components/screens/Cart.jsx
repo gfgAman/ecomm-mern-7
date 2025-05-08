@@ -19,8 +19,8 @@ const Cart = () => {
 
         data.map(item => (
           <>
-            <b className='text-bold'>{item.title}</b>
-            <h4>{item.description}</h4>
+            <b className='text-bold'>{item.name}</b>
+            <h4>{item.price}</h4>
           </>
         ))
       }
